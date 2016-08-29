@@ -13,9 +13,21 @@ class TasksController < ApplicationController
     render json: task.to_json
   end
 
+  def update
+    list = List.find(params[:list_id])
+    task = Task.find(params[:id])
+    task.update(task_params)
+    render json: task.to_json
+  end
+
+  def destroy
+    task = Task.find(params[:id])
+    task.destroy
+  end
+
   private
   def task_params
-    params.require(:task).permit(:description)
+    params.require(:task).permit(:description, :completed)
   end
 
 end

@@ -6,11 +6,16 @@ class App extends React.Component {
       tasks: []
     };
     this.updateTasks = this.updateTasks.bind(this)
+    this.deleteTask = this.deleteTask.bind(this)
   }
 
   updateTasks(task) {
-    debugger;
-    this.setState({tasks: [this.state.tasks].concat(task)})
+    this.setState({tasks: this.state.tasks.concat(task)})
+  }
+
+  deleteTask(task) {
+    var index = this.state.tasks.indexOf(task)
+    this.setState({tasks: this.state.tasks.splice(index, 1)})
   }
 
   componentDidMount() {
@@ -18,7 +23,6 @@ class App extends React.Component {
       url: 'lists/1/tasks',
       method: 'GET'
     }).done((response) => {
-      console.log(response)
       this.setState ({
         tasks: response
       });
@@ -28,10 +32,12 @@ class App extends React.Component {
   render () {
     return (
       <div className="container">
-        <h1> To Do </h1>
-        <ul>
+        <div className="page-header">
+          <h1> To Do </h1>
+        </div>
+        <ul className="list-group">
           {this.state.tasks.map(function(task, i) {
-            return <Task data={task} key={i}/>
+            return <Task onUpdate={this.deleteTask} data={task} key={i}/>
           })}
         </ul>
         <NewTaskForm onUpdate = {this.updateTasks}/>
